@@ -1,24 +1,41 @@
-﻿using System.Text;
+﻿using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace vsy42
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        //https://github.com/EldarMuradov/LocalChat/tree/master
         public MainWindow()
         {
             InitializeComponent();
         }
+        public static int LocalPort;
+        public static int RemotePort;
+        public static IPAddress Ip;
+        public static string Name = "";
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Ip = IPAddress.Parse("127.0.0.1");
+
+            Name = tbUsername.Text; 
+
+            LocalPort = Convert.ToInt32(tbReceivePort.Text);
+
+            RemotePort = Convert.ToInt32(tbSendPort.Text);
+
+            Thread thread = new(Reciever.ReceiveMessage);
+            thread.Start();
+
+            Sender.SendMessage();
+
+            Console.ReadLine();
+        }
     }
 }
+
