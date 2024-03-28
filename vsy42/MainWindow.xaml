@@ -1,20 +1,28 @@
 ﻿<Window x:Class="vsy42.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="460" Width="600">
+        Title="MainWindow" Height="500" Width="600">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <Label x:Name="lblPublicIP" Grid.Row="0" Grid.Column="0" Height="40" FontSize="16"></Label>
+        <Label x:Name="lblLocalIP" Grid.Row="0" Grid.Column="1" Height="40" FontSize="16"></Label>
+
         <!-- Linke Spalte -->
-        <StackPanel Grid.Column="0" Margin="10">
+        <StackPanel Grid.Column="0" Grid.Row="1" Margin="10">
+            
             <Label HorizontalAlignment="Center" Margin="0,0,0,30">Please add the following data to proceed</Label>
 
             <Label>Add Username:</Label>
             <TextBox x:Name="tbUsername" BorderBrush="#FF0845F9" Height="30" Margin="0,0,0,10"></TextBox>
-            <Label>Add Ip-Address:</Label>
+            <Label>Add Target-Ip-Address:</Label>
             <TextBox x:Name="tbIpAddress" BorderBrush="#FF0845F9" Height="30" Margin="0,0,0,10"></TextBox>
             <Label>Add Port to Receive Messages:</Label>
             <TextBox x:Name="tbReceivePort" BorderBrush="#FF0845F9" Height="30" Margin="0,0,0,10"></TextBox>
@@ -24,7 +32,7 @@
         </StackPanel>
 
         <!-- Rechte Spalte (Chatfenster) -->
-        <StackPanel Grid.Column="1" Margin="10">
+        <StackPanel Grid.Column="1" Grid.Row="1" Margin="10">
             <Label Content="Chat Window" HorizontalAlignment="Center" Margin="0,0,0,10"/>
             <TextBox x:Name="tbChatWindow" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" IsReadOnly="True" BorderBrush="#FF0845F9" Height="269"/>
             <TextBox x:Name="tbMessage" Height="30" Margin="0,10,0,10" BorderBrush="#FF0845F9" />

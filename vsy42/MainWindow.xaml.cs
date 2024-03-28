@@ -15,14 +15,23 @@ namespace vsy42
         private string username;
         private int localPort;
         private int remotePort;
-        private IPAddress ip;
+        private IPAddress targetIP;
 
         public MainWindow()
         {
             InitializeComponent();
-            sender = new UdpClient();
-            receiveThread = new Thread(ReceiveMessage);
-            receiveThread.IsBackground = true;
+            try
+            {
+                sender = new UdpClient();
+                receiveThread = new Thread(ReceiveMessage);
+                receiveThread.IsBackground = true;
+                lblPublicIP.Content = $"Your Public-IP:  {GetPublicIP()}";
+                lblLocalIP.Content = $"Your Local-IP: {GetLocalIP()}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fehler beim Initialisieren: " + ex.Message);
+            }
         }
 
         private void autoFillTextBoxes()
@@ -37,14 +46,13 @@ namespace vsy42
                 username = tbUsername.Text;
                 localPort = int.Parse(tbReceivePort.Text);
                 remotePort = int.Parse(tbSendPort.Text);
-                ip = IPAddress.Parse(tbIpAddress.Text);
-                //ip = IPAddress.Parse("127.0.0.1");
+                targetIP = IPAddress.Parse(tbIpAddress.Text);
 
                 // Starte den Empfangsthread
                 receiveThread.Start();
 
                 // Starte den Sendevorgang
-                SendMessage($"I joined the chat, Receiver: {localPort}, Sender: {remotePort}, IP: {ip}.");
+                SendMessage($"I joined the chat, Receiver: {localPort}, Sender: {remotePort}, Target-IP: {targetIP}.");
             }
             catch (Exception ex)
             {
@@ -57,7 +65,7 @@ namespace vsy42
             try
             {
                 byte[] data = Encoding.UTF8.GetBytes(username + ": " + message);
-                sender.Send(data, data.Length, new IPEndPoint(ip, remotePort));
+                sender.Send(data, data.Length, new IPEndPoint(targetIP, remotePort));
                 tbChatWindow.AppendText(username + ": " + message + "\n");
                 tbMessage.Clear();
             }
@@ -103,89 +111,55 @@ namespace vsy42
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-            receiveThread.Abort();
-            receiver.Close();
-            sender.Close();
+            try
+            {
+                receiveThread.Abort();
+                receiver.Close();
+                sender.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fehler beim Schließen der Verbindungen: " + ex.Message);
+            }
         }
 
+        private string GetPublicIP()
+        {
+            try
+            {
+                WebClient client = new WebClient();
+                return client.DownloadString("http://api.ipify.org");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fehler beim Abrufen der öffentlichen IP-Adresse: " + ex.Message);
+                return "N/A";
+            }
+        }
+
+        public string GetLocalIP()
+        {
+            try
+            {
+                string hostName = Dns.GetHostName();
+                IPAddress[] addresses = Dns.GetHostAddresses(hostName);
+
+                foreach (IPAddress address in addresses)
+                {
+                    if (address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return address.ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fehler beim Abrufen der lokalen Netzwerk-IP-Adresse: " + ex.Message);
+            }
+
+            return "N/A";
+        }
 
     }
 }
-
-
-
-
-
-//using System;
-//using System.Diagnostics;
-//using System.Net;
-//using System.Net.Sockets;
-//using System.Text;
-//using System.Threading.Tasks;
-//using System.Windows;
-
-//namespace vsy42
-//{
-//    public partial class MainWindow : Window
-//    {
-//        //https://github.com/EldarMuradov/LocalChat/tree/master
-//        public MainWindow()
-//        {
-//            InitializeComponent();
-//        }
-//        public static int LocalPort;
-//        public static int RemotePort;
-//        public static IPAddress Ip;
-//        public static string Name = "";
-
-//        private void btnStartChat_Click(object sender, RoutedEventArgs e)
-//        {
-//            Ip = IPAddress.Parse("127.0.0.1");
-
-//            Name = tbUsername.Text;
-
-//            LocalPort = Convert.ToInt32(tbReceivePort.Text);
-
-//            RemotePort = Convert.ToInt32(tbSendPort.Text);
-
-//            Thread thread = new(ReceiveMessage);
-//            thread.Start();
-
-//            SendMessage();
-
-//            Console.ReadLine();
-//        }
-
-//        public void SendMessage()
-//        {
-//            using UdpClient sender = new();
-//            while (true)
-//            {
-//                var message = $"{Name}: {tbMessage.Text}";
-//                byte[] data = Encoding.UTF8.GetBytes(message);
-//                sender.Send(data, data.Length, new IPEndPoint(Ip, RemotePort));
-//                tbChatWindow.Text = $"{message} \n\n";
-//            }
-//        }
-
-//        public void ReceiveMessage()
-//        {
-//            using UdpClient receiver = new(LocalPort);
-//            IPEndPoint ip = null;
-//            while (true)
-//            {
-//                var result = receiver.Receive(ref ip);
-//                var message = Encoding.UTF8.GetString(result);
-//                tbChatWindow.Text = $"{message} \n\n";
-//            }
-//        }
-
-//        private void btnSend_Click(object sender, RoutedEventArgs e)
-//        {
-
-//        }
-
-
-//    }
-//}
 
