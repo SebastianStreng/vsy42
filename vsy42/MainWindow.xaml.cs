@@ -34,10 +34,6 @@ namespace vsy42
             }
         }
 
-        private void autoFillTextBoxes()
-        {
-
-        }
 
         private void StartChat()
         {
