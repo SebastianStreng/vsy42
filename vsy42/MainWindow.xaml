@@ -17,8 +17,8 @@
 
         <!-- Linke Spalte -->
         <StackPanel Grid.Column="0" Grid.Row="1" Margin="10">
-            
-            <Label HorizontalAlignment="Center" Margin="0,0,0,30">Please add the following data to proceed</Label>
+
+            <Label HorizontalAlignment="Center" Margin="0,0,0,30" FontSize="13">Please add the following data to proceed</Label>
 
             <Label>Add Username:</Label>
             <TextBox x:Name="tbUsername" BorderBrush="#FF0845F9" Height="30" Margin="0,0,0,10"></TextBox>
@@ -33,7 +33,7 @@
 
         <!-- Rechte Spalte (Chatfenster) -->
         <StackPanel Grid.Column="1" Grid.Row="1" Margin="10">
-            <Label Content="Chat Window" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+            <Label Content="Chat Window" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="13"/>
             <TextBox x:Name="tbChatWindow" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" IsReadOnly="True" BorderBrush="#FF0845F9" Height="269"/>
             <TextBox x:Name="tbMessage" Height="30" Margin="0,10,0,10" BorderBrush="#FF0845F9" />
             <Button Content="Send" Height="40" BorderBrush="#FF0845F9" Click="btnSend_Click"/>

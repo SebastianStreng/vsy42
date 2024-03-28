@@ -27,6 +27,7 @@ namespace vsy42
                 receiveThread.IsBackground = true;
                 lblPublicIP.Content = $"Your Public-IP:  {GetPublicIP()}";
                 lblLocalIP.Content = $"Your Local-IP: {GetLocalIP()}";
+                autoFillTextBoxes(); 
             }
             catch (Exception ex)
             {
@@ -34,6 +35,25 @@ namespace vsy42
             }
         }
 
+        private void autoFillTextBoxes()
+        {
+            tbUsername.Text = "User1";
+            tbIpAddress.Text = $"{RemoveLastTwoDigits(GetLocalIP())}xx"; 
+            tbReceivePort.Text = "50000";
+            tbSendPort.Text = "50001"; 
+        }
+
+        static string RemoveLastTwoDigits(string input)
+        {
+            if (input.Length >= 2)
+            {
+                return input.Substring(0, input.Length - 2);
+            }
+            else
+            {
+                return input;
+            }
+        }
 
         private void StartChat()
         {
